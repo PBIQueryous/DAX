@@ -1,2 +1,2 @@
 # PowerBI DAX
-A Repository for PBI DAX patterns
+PBI DAX patterns
