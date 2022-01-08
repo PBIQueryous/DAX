@@ -12,7 +12,29 @@ This repo contains custom (template) expressions in DAX, which can be used in Po
 ## Common Templates
 Examples of Tabular Editor Templates for DAX
 ### Simple version
+
+
+
+#### Selected Measures
 ```c#
+/*
+ * Title: Auto-generate SUM measures from measures
+ * 
+ * Author:
+ * Imran Haq, PBIQueryous
+ * 
+ * Inspiration and Credits:
+ * ------------------------
+ * PowerBI.Tips Team, Curbal, Chandoo, Goodly, SQLBI, 
+ * Enterprise DNA, GreySkullBI, The PowerBI Guy and so many more!
+ * Daniel Otykier, twitter.com/DOtykier,
+ * Mike Carlo, Tommy Puglia, Seth
+ * Tabular Editor 2/3 Documentation,
+ * ------------------------
+ * 
+ * This script, when executed, will loop through the currently selected MEASURES,
+ * creating one SUM measure for each MEASURE.
+ */
 /******** SCRIPT START ********/
 // Creates time intelligence measures for every selected measure:
     foreach(var m in Selected.Measures) 
@@ -36,6 +58,48 @@ Examples of Tabular Editor Templates for DAX
 ```
 
 
+#### Selected Columns
+```c#
+/*
+ * Title: Auto-generate SUM measures from columns
+ * 
+ * Author:
+ * Imran Haq, PBIQueryous
+ * 
+ * Inspiration and Credits:
+ * ------------------------
+ * PowerBI.Tips Team, Curbal, Chandoo, Goodly, SQLBI, 
+ * Enterprise DNA, GreySkullBI, The PowerBI Guy and so many more!
+ * Daniel Otykier, twitter.com/DOtykier,
+ * Mike Carlo, Tommy Puglia, Seth
+ * Tabular Editor 2/3 Documentation,
+ * ------------------------
+ * 
+ * This script, when executed, will loop through the currently selected COLUMNS,
+ * creating one SUM measure for each COLUMNS.
+ */
+/******** SCRIPT START ********/
+// Creates time intelligence measures for every selected column:
+    foreach(var c in Selected.Columns) 
+    {
+    c.Table.AddMeasure(
+        // Name
+        c.Name + "Name Affix",
+        
+        // DAX expression // 
+        "var _Result = CALCULATE( " + c.DaxObjectName " )"
+         + '\n' + "RETURN"
+         + '\n' + "'\t' _Result",
+        
+        // Display Folder
+        c.DisplayFolder)
+        
+        // Format String
+        .FormatString = "0.00";
+}
+/******** SCRIPT END ********/
+```
+
 
 ### Advanced version
 ```c#
@@ -54,7 +118,7 @@ Examples of Tabular Editor Templates for DAX
  * Tabular Editor 2/3 Documentation,
  * ------------------------
  * 
- * This script, when executed, will loop through the currently selected columns,
+ * This script, when executed, will loop through the currently selected COLUMNS,
  * creating one SUM measure for each column and also hiding the column itself.
  */
  
@@ -79,3 +143,73 @@ foreach(var c in Selected.Columns)
 }
 /******** SCRIPT END ********/
 ```
+
+
+### Complex version (Case-specific)
+```c#
+/*
+ * Title: Auto-generate SUM measures from columns
+ * 
+ * Author:
+ * Imran Haq, PBIQueryous
+ * 
+ * Inspiration and Credits:
+ * ------------------------
+ * PowerBI.Tips Team, Curbal, Chandoo, Goodly, SQLBI, 
+ * Enterprise DNA, GreySkullBI, The PowerBI Guy and so many more!
+ * Daniel Otykier, twitter.com/DOtykier,
+ * Mike Carlo, Tommy Puglia, Seth
+ * Tabular Editor 2/3 Documentation,
+ * ------------------------
+ * 
+ * This script, when executed, will loop through the currently selected COLUMNS,
+ * creating one SUM measure for each column and also hiding the column itself.
+ */
+ 
+/*# FULL SCRIPT START #*/
+// Script Variable
+// Creates a series of time intelligence measures for each selected (base SUM) measure:
+foreach(var m in Selected.Measures) 
+
+    {   // SCRIPT START
+    
+/***************************************** MeasureStart ************************************/
+// Measure1: SUM
+    var m1 = m.Table.AddMeasure
+    (                             
+        // MeasureStart //
+        // MeasureName
+        m.Name + " | SUM",                               
+    
+        // Measure Descriptive Text
+        '\n' + "// Base SUM "                           
+        
+        /***** DAX expression START *****/
+        // DAX Start
+        // DAX Variables
+        + '\n' + '\n' + calcVarMaxDateFY                
+        + '\n' + "VAR _result = CALCULATE( " + m.DaxObjectName + " ) " + '\n'
+        
+        // Return Result
+        + '\n' + rReturn
+        + '\n' + '\t' + "// IF(  NOT ISBLANK( " + m.DaxObjectName + " ) ,  _result  )"
+        + '\n' + '\t' + rResult
+    );
+        /***** DAX expression END *****/
+        
+        // Display Folder (default - same folder as selected)
+        m1.DisplayFolder 
+        // Optional: new Folder name below
+        = "Base" 
+        ;      
+    
+        /***** Provide some documentation *****/
+        m1.Description = "Derived from " + m.Name + ": " + 
+        // Type metadata text here
+        "Base Measure - End for Year, no filters."
+        ;                             
+        m1.FormatString = Currency
+        ; 
+    }                                               
+/**************************************** MeasureEnd **************************************/
+/*# FULL SCRIPT END #*/
