@@ -4,7 +4,7 @@ This repo contains custom (template) expressions in DAX, which can be used in Po
 
 | Theme      | Description |
 | ---------- |----------------------------------------------------------|
-| Time-intelligence | DAX time-intelligence expressions, from YTD, FTYD, CML and much more. <br/> **NOTE:** All my time-intelligence measures are based on this my Dates Table here > [datesTable](https://github.com/PBIQueryous/M-Code/tree/main/Calendars) |
+| [TimeIntelligence](https://github.com/PBIQueryous/DAX/tree/main/TimeIntelligence) | DAX time-intelligence expressions, from YTD, FTYD, CML and much more. <br/> **NOTE:** All my time-intelligence measures are based on this my Dates Table here > [datesTable](https://github.com/PBIQueryous/M-Code/tree/main/Calendars) |
 | [Functions](https://github.com/PBIQueryous/M-Code/tree/main/Functions) | M-code related transformations and functions |
 
 ---
@@ -210,6 +210,7 @@ foreach(var m in Selected.Measures)
         ;                             
         m1.FormatString = Currency
         ; 
-    }                                               
-/**************************************** MeasureEnd **************************************/
+        /**************************************** MeasureEnd **************************************/
+    }   // SCRIPT END                                            
+
 /*# FULL SCRIPT END #*/
