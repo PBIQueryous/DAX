@@ -20,11 +20,17 @@ Examples of Tabular Editor Templates for DAX
     m.Table.AddMeasure(
         // Name
         m.Name + "Name Affix",
+        
         // DAX expression // 
         "var _Result = CALCULATE( " + m.DaxObjectName " )"
-         + '\n' + "RETURN" + '\n' + "'\t' _Result",
+         + '\n' + "RETURN"
+         + '\n' + "'\t' _Result",
+        
         // Display Folder
-        m.DisplayFolder).FormatString = "0.00"; // Set format string
+        m.DisplayFolder)
+        
+        // Format String
+        .FormatString = "0.00";
 }
 /******** SCRIPT END ********/
 ```
