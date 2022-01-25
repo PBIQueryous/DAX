@@ -2,6 +2,8 @@
 This code is a real-world example of a calculated column which draws on several tables, using RELATED, RELATEDTABLE, 1-N and N-1 relationships
 I translated it from a previous SQL Query - it's huge, the challenge is... can this be optimised?
 
+I am hoping it highlights the power of DAX calculated columns - I would love to be able to do this in PowerQuery, but due to the complexity of tables and relationships, it would be massively expensive and likely super inefficient! Thoughts and comments welcome :) 
+
 ```js
 Provision Types =
 /* Calculated Column: SWITCH statements to categorise Provision Types based on LARS files - LARS Delivery; LARS Category Ref (Legal Entitlement) and Basic Skills Type (Annual Value). This is a translation of a SQL query. There order of the arguments should not impact the result. Each argument is mutually exclusive */
