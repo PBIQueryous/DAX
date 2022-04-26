@@ -1,4 +1,4 @@
-
+```
 #DAX Measure - Latest Month to Date 
 
 ###Cumulative Measure
@@ -8,3 +8,4 @@
 '''js
 
 '''
+```
