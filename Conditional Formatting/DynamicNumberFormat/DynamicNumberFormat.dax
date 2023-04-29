@@ -1,0 +1,97 @@
+
+//------- GLOBAL VARIABLES ---------\\
+// var _default1 = "#,0;-#,0;#,0"
+var _selectedMeasure = SELECTEDMEASURE()
+
+
+var _GBP = "£"
+var _None = ""
+var _symbol = _GBP          -- select symbol
+
+var _prefix1 = "#,0.0"
+var _prefix2 = "#,0"
+var _prefix3 = "#,##0"  
+var _BasePrefix1 = _symbol & _prefix1
+var _BasePrefix2 = _symbol & _prefix2
+var _BasePrefix3 = _symbol & _prefix3
+var _BaseMethod1 = _BasePrefix1 & "@-" & _BasePrefix1
+var _BaseMethod2 = _BasePrefix2 & ";-" & _BasePrefix2
+var _BaseMethod3 = _BasePrefix3 & ";-" & _BasePrefix3
+
+//------- METHOD 1 ---------\\
+------------------------------
+var _billions = _symbol & "#,,,.0 B"
+var _millions = _symbol & "#,,.0 M"
+var _thousands = _symbol & "#,.0 K"
+var _hundreds = _symbol & "0,0"
+
+var _method1 = 
+    SWITCH(
+        TRUE(),
+        _selectedMeasure < 1000, _hundreds,
+        _selectedMeasure < 1000000, _thousands,
+        _selectedMeasure < 1000000000, _millions,
+        _selectedMeasure < 10000000000, _billions
+    )
+
+//------- METHOD 2 ---------\\
+------------------------------
+
+var _digits = 
+    IFERROR(
+        LEN( CONVERT( INT( _selectedMeasure ),
+        STRING )), 0
+    )
+var _default = _BaseMethod1
+var __Tn = _symbol & "#,#0,,,,.0 T"
+var _Tn = __Tn & ";-" & __Tn
+var __Bn = _symbol & "#,#0,,,.0 B"
+var _Bn = __Bn & ";-" & __Bn
+var __M = _symbol & "#,#0,,.0 M"
+var _M = __M & ";-" & __M
+var __K = _symbol & "#,#0,.0 K"
+var _K = __K & ";-" & __K
+
+var _method2 =
+    SWITCH(
+        TRUE(),
+        _digits >= 13, _Tn ,
+        _digits >= 10,  _Bn,
+        _digits >= 7,  _M,
+        _digits >= 4,  _K,
+        _default
+    )
+
+//------- METHOD 3 ---------\\
+------------------------------
+
+VAR dp = 1
+VAR dps = "." & REPT ( 0, dp )
+VAR SafeLog =
+    IF (
+        _selectedMeasure = 0,
+        0,
+        INT ( LOG ( ABS ( _selectedMeasure ), 1000 ) )
+    )
+VAR Suffix =
+    SWITCH ( Safelog, 1, " K", 2, " M", 3, " Bn", 4, " Tn", 5, " q" )
+VAR Commas =
+    REPT ( ",", ABS ( Safelog ) )
+var _pos = _BasePrefix3 & Commas & dps & Suffix
+var _neg = "-" & _BasePrefix3 & Commas & dps & Suffix
+var _numberFormat = _pos & ";" & _neg & ";-"
+
+VAR _method3 =
+    IF (
+        dp > 0,
+        _numberFormat,
+        _numberFormat
+    )
+
+//------- CHOOSE FORMATTING METHOD ---------\\
+----------------------------------------------
+
+var _finalFormat = _method3             -- Choose between _method1; _method2; _method3
+RETURN
+    _finalFormat
+            
