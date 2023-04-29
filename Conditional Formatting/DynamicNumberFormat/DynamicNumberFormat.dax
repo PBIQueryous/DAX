@@ -42,7 +42,7 @@ var _digits =
         LEN( CONVERT( INT( _selectedMeasure ),
         STRING )), 0
     )
-var _default = _BaseMethod1
+var _default = _BaseMethod2
 var __Tn = _symbol & "#,#0,,,,.0 T"
 var _Tn = __Tn & ";-" & __Tn
 var __Bn = _symbol & "#,#0,,,.0 B"
@@ -65,7 +65,7 @@ var _method2 =
 //------- METHOD 3 ---------\\
 ------------------------------
 
-VAR dp = 1
+VAR dp = IF(SELECTEDMEASURE() >= 1000, 1, 0)
 VAR dps = "." & REPT ( 0, dp )
 VAR SafeLog =
     IF (
@@ -85,8 +85,22 @@ VAR _method3 =
     IF (
         dp > 0,
         _numberFormat,
-        _numberFormat
+		_numberFormat
+        
     )
+//------- METHOD 4 ---------\\
+------------------------------
+var _baseFormat = "#,0"
+var _baseDecimal = "0"
+var _method4 = 
+	SWITCH(
+		TRUE(),
+		_selectedMeasure < 1000, "0",
+        _selectedMeasure < 1000000, _baseFormat & ",." & _baseDecimal & " K",
+        _selectedMeasure < 1000000000, _baseFormat & ",,." & _baseDecimal & " M",
+        _selectedMeasure < 10000000000, _baseFormat & ",,,." & _baseDecimal & "B",
+		_baseFormat
+	)
 
 //------- CHOOSE FORMATTING METHOD ---------\\
 ----------------------------------------------
@@ -94,4 +108,3 @@ VAR _method3 =
 var _finalFormat = _method3            -- Choose between _method1; _method2; _method3
 RETURN
     _finalFormat
-            
