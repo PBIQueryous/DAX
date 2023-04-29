@@ -14,7 +14,7 @@ var _prefix3 = "#,##0"
 var _BasePrefix1 = _symbol & _prefix1
 var _BasePrefix2 = _symbol & _prefix2
 var _BasePrefix3 = _symbol & _prefix3
-var _BaseMethod1 = _BasePrefix1 & "@-" & _BasePrefix1
+var _BaseMethod1 = _BasePrefix1 & ";-" & _BasePrefix1
 var _BaseMethod2 = _BasePrefix2 & ";-" & _BasePrefix2
 var _BaseMethod3 = _BasePrefix3 & ";-" & _BasePrefix3
 
@@ -91,7 +91,7 @@ VAR _method3 =
 //------- CHOOSE FORMATTING METHOD ---------\\
 ----------------------------------------------
 
-var _finalFormat = _method3             -- Choose between _method1; _method2; _method3
+var _finalFormat = _method3            -- Choose between _method1; _method2; _method3
 RETURN
     _finalFormat
             
