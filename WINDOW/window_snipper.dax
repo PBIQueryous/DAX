@@ -1,0 +1,19 @@
+Pareto Chart (Customer) =
+VAR _TotalSales =
+    CALCULATE (
+        [Total Sales],
+        ALLSELECTED ( Customers[Customer Names] )
+    )
+VAR _CumulativeSales =
+    CALCULATE (
+        [Total Sales],
+        WINDOW (
+            1, ABS,
+            0, REL,
+            ALLSELECTED ( Customers[Customer Names] ),
+            ORDERBY ( [Total Sales], DESC )
+        )
+    )
+VAR _Result = DIVIDE ( _CumulativeSales, _TotalSales )
+RETURN
+    _Result
