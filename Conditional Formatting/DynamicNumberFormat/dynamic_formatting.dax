@@ -3,56 +3,52 @@
 var _selectedMeasure = SELECTEDMEASURE()
 var _digitCount = 
     IFERROR(
-        LEN( CONVERT( INT( _selectedMeasure ),
-        STRING )), 0
-    )
+        LEN( 
+            CONVERT( 
+                INT( _selectedMeasure ),
+            STRING )
+        )
+    , 0)
 
+// define abbreviations
+var _trillion = "T"
+var _billion = "B"
+var _million = "M"
+var _thousand = "K"
+
+// derive suffix
 var _suffix = 
     SWITCH(
         TRUE(),
-        _digitCount >= 12, "T" ,
-        _digitCount >= 9,  "B",
-        _digitCount >= 6,  "M",
-        _digitCount >= 4,  "K",
+        _digitCount >= 12, _trillion , // 13 to display 100 billions ( 0.9 Trillion vs 880 billion )
+        _digitCount >= 9,  _billion, // 10 to display 100 millions ( 0.9 Billion vs 880 million )
+        _digitCount >= 6,  _million, // 7 to display 100 thousands ( 0.9 Million vs 100 thousand )
+        _digitCount >= 4,  _thousand,
         ""
     )
 
-/* var _T =  "#,#0,,,,.# T"
-var _B =  "#,#0,,,.# B"
-var _M =  "#,#0,,.# M"
-var _K =  "#,#0,.# K"
-var _H =  "#,##0" */
-
-var _decimalvalue = "#,##0.00"
-
-
+// derive commas and decimals per abbreviation
 var _dp = 0
 var _dps = "." & REPT ( 0, _dp )
 var commas =
     REPT( "," ,
         SWITCH( _suffix,
-        "T", 4,     // "#,#0,,,,.# T"
-        "B", 3,     // "#,#0,,,.# B"
-        "M", 2,     // "#,#0,,.# M"
-        "K", 1      // "#,#0,.# K"
-        ,0)         // "#,##0"
+        _trillion, 4,   // "#,#0,,,,.# T"
+        _billion, 3,    // "#,#0,,,.# B"
+        _million, 2,    // "#,#0,,.# M"
+        _thousand, 1    // "#,#0,.# K"
+        ,0)             // "#,##0"
     )
-/* var _result =
-    SWITCH(
-        TRUE(),
-        _digitCount >= 12, _T ,
-        _digitCount >= 9,  _B,
-        _digitCount >= 6,  _M,
-        _digitCount >= 4,  _K,
-        _digitCount >=2, _H,
-        _decimalvalue
-    ) */
-var _formattedNumber  = "#,#0" & commas & _dps & "# " & _suffix
-var _result2 = 
+
+// derive formatting
+var _decimalvalue = "#,##0.00"
+var _baseFormat = "#,#0"
+var _formattedNumber  = _baseFormat & commas & _dps & "# " & _suffix
+var _result = 
     SWITCH(
         TRUE(),
         _digitCount >= 2, _formattedNumber
         , _decimalvalue
     )
 RETURN
-    _result2
+    _result
