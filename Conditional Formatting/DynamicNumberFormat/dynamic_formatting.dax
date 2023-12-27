@@ -1,0 +1,58 @@
+//------- DYNAMIC FORMATTING ---------\\
+------------------------------
+var _selectedMeasure = SELECTEDMEASURE()
+var _digitCount = 
+    IFERROR(
+        LEN( CONVERT( INT( _selectedMeasure ),
+        STRING )), 0
+    )
+
+var _suffix = 
+    SWITCH(
+        TRUE(),
+        _digitCount >= 12, "T" ,
+        _digitCount >= 9,  "B",
+        _digitCount >= 6,  "M",
+        _digitCount >= 4,  "K",
+        ""
+    )
+
+/* var _T =  "#,#0,,,,.# T"
+var _B =  "#,#0,,,.# B"
+var _M =  "#,#0,,.# M"
+var _K =  "#,#0,.# K"
+var _H =  "#,##0" */
+
+var _decimalvalue = "#,##0.00"
+
+
+var _dp = 0
+var _dps = "." & REPT ( 0, _dp )
+var commas =
+    REPT( "," ,
+        SWITCH( _suffix,
+        "T", 4,     // "#,#0,,,,.# T"
+        "B", 3,     // "#,#0,,,.# B"
+        "M", 2,     // "#,#0,,.# M"
+        "K", 1      // "#,#0,.# K"
+        ,0)         // "#,##0"
+    )
+/* var _result =
+    SWITCH(
+        TRUE(),
+        _digitCount >= 12, _T ,
+        _digitCount >= 9,  _B,
+        _digitCount >= 6,  _M,
+        _digitCount >= 4,  _K,
+        _digitCount >=2, _H,
+        _decimalvalue
+    ) */
+var _formattedNumber  = "#,#0" & commas & _dps & "# " & _suffix
+var _result2 = 
+    SWITCH(
+        TRUE(),
+        _digitCount >= 2, _formattedNumber
+        , _decimalvalue
+    )
+RETURN
+    _result2
